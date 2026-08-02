@@ -30,12 +30,7 @@ jobs:
           wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O /tmp/cmdline-tools.zip
           unzip -q /tmp/cmdline-tools.zip -d "$ANDROID_SDK_ROOT"
           mkdir -p "$ANDROID_SDK_ROOT/cmdline-tools/latest"
-          if [ -d "$ANDROID_SDK_ROOT/cmdline-tools/cmdline-tools" ]; then
-            mv "$ANDROID_SDK_ROOT/cmdline-tools/cmdline-tools"/* "$ANDROID_SDK_ROOT/cmdline-tools/latest/"
-            rm -rf "$ANDROID_SDK_ROOT/cmdline-tools/cmdline-tools"
-          else
-            mv "$ANDROID_SDK_ROOT/cmdline-tools"/* "$ANDROID_SDK_ROOT/cmdline-tools/latest/"
-          fi
+          find "$ANDROID_SDK_ROOT/cmdline-tools" -mindepth 1 -maxdepth 1 ! -name latest -exec mv {} "$ANDROID_SDK_ROOT/cmdline-tools/latest/" \;
           yes | sdkmanager --sdk_root="$ANDROID_SDK_ROOT" --licenses
           yes | sdkmanager --sdk_root="$ANDROID_SDK_ROOT" "platform-tools" "platforms;android-31" "build-tools;37.0.0" "ndk;25.1.8937393" "cmdline-tools;latest"
       - name: Install Python dependencies
